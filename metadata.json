@@ -1,0 +1,6 @@
+{
+  "name": "ArtWorn",
+  "description": "Hand-painted, embroidered, and personalized wearable-art fashion studio based in Dehradun, India. Turn your style into art.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,40 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isImageUnder5MB() {
+      return request.resource != null
+        && request.resource.size <= 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp|gif|heic)');
+    }
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.email == 'khushi.0251mba455@dgu.ac.in' && request.auth.token.email_verified == true;
+    }
+
+    // Custom request reference images & chat attachments
+    match /custom-requests/{userId}/{allPaths=**} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow write: if isSignedIn() && (request.auth.uid == userId || isAdmin()) && isImageUnder5MB();
+    }
+
+    // Payment proof screenshots
+    match /payment-proofs/{userId}/{allPaths=**} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow write: if isSignedIn() && request.auth.uid == userId && isImageUnder5MB();
+    }
+
+    // Review photos (publicly viewable once uploaded by verified user)
+    match /reviews/{userId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if isSignedIn() && request.auth.uid == userId && isImageUnder5MB();
+    }
+
+    // Admin product & gallery assets
+    match /catalog/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && isImageUnder5MB();
+    }
+  }
+}

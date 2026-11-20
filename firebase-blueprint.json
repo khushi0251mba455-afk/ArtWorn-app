@@ -1,0 +1,340 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Registered customer or studio admin profile",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "phone": { "type": "string", "maxLength": 25 },
+        "role": { "type": "string", "enum": ["customer", "admin"] },
+        "referralCode": { "type": "string", "maxLength": 32 },
+        "referredBy": { "type": "string", "maxLength": 32 },
+        "referralCredits": { "type": "number" },
+        "stylePreferences": { "type": "array" },
+        "addresses": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "role", "createdAt", "updatedAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Hand-painted or embroidered wearable art product",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 140 },
+        "category": { "type": "string", "enum": ["Denim Jackets", "T-Shirts", "Tote Bags", "Denim Pieces", "Accessories"] },
+        "description": { "type": "string", "minLength": 5, "maxLength": 2000 },
+        "price": { "type": "number" },
+        "compareAtPrice": { "type": "number" },
+        "costPrice": { "type": "number" },
+        "colors": { "type": "array" },
+        "sizes": { "type": "array" },
+        "images": { "type": "array" },
+        "occasion": { "type": "string", "maxLength": 60 },
+        "isCustom": { "type": "boolean" },
+        "featured": { "type": "boolean" },
+        "stock": { "type": "number" },
+        "deliveryDays": { "type": "number" },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "number" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "category", "description", "price", "images", "active"]
+    },
+    "CustomRequest": {
+      "title": "CustomRequest",
+      "description": "Bespoke custom wearable art commission request",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "customerName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "customerEmail": { "type": "string", "maxLength": 200 },
+        "customerPhone": { "type": "string", "maxLength": 25 },
+        "productType": { "type": "string", "enum": ["T-Shirt", "Denim Jacket", "Tote Bag", "Denim Jeans", "Other"] },
+        "size": { "type": "string", "maxLength": 20 },
+        "color": { "type": "string", "maxLength": 40 },
+        "style": { "type": "string", "enum": ["Hand-Painted", "Embroidery", "Mixed Media", "Patches & Embellishments"] },
+        "theme": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "customText": { "type": "string", "maxLength": 200 },
+        "preferredColors": { "type": "string", "maxLength": 150 },
+        "occasion": { "type": "string", "maxLength": 80 },
+        "description": { "type": "string", "minLength": 5, "maxLength": 2000 },
+        "referenceImages": { "type": "array" },
+        "budgetRange": { "type": "string", "maxLength": 60 },
+        "neededByDate": { "type": "string", "maxLength": 40 },
+        "isGift": { "type": "boolean" },
+        "giftMessage": { "type": "string", "maxLength": 300 },
+        "estimatedMin": { "type": "number" },
+        "estimatedMax": { "type": "number" },
+        "quotedPrice": { "type": "number" },
+        "advanceAmount": { "type": "number" },
+        "leadSource": { "type": "string", "maxLength": 40 },
+        "status": { "type": "string", "enum": ["Enquiry", "Quote Sent", "Approved", "Paid", "In Progress", "Shipped", "Delivered", "Cancelled"] },
+        "dueDate": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "customerName", "productType", "style", "theme", "description", "status", "createdAt", "updatedAt"]
+    },
+    "CustomMessage": {
+      "title": "CustomMessage",
+      "description": "Chat message between customer and artist on a custom request",
+      "type": "object",
+      "properties": {
+        "senderId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "senderName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "senderRole": { "type": "string", "enum": ["customer", "admin"] },
+        "text": { "type": "string", "maxLength": 1500 },
+        "imageUrl": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["senderId", "senderName", "senderRole", "createdAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer order for ready-made, pre-order, or approved custom art",
+      "type": "object",
+      "properties": {
+        "orderNumber": { "type": "string", "minLength": 3, "maxLength": 32 },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "customerName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "customerEmail": { "type": "string", "maxLength": 200 },
+        "customerPhone": { "type": "string", "maxLength": 25 },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "shippingCharge": { "type": "number" },
+        "discount": { "type": "number" },
+        "couponCode": { "type": "string", "maxLength": 40 },
+        "total": { "type": "number" },
+        "costTotal": { "type": "number" },
+        "advancePaid": { "type": "number" },
+        "balanceDue": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["UPI", "COD", "Razorpay", "Advance50"] },
+        "paymentStatus": { "type": "string", "enum": ["Pending Verification", "Advance Paid", "Paid", "COD Pending"] },
+        "paymentProofUrl": { "type": "string", "maxLength": 1000 },
+        "shippingAddress": { "type": "object" },
+        "status": { "type": "string", "enum": ["Enquiry", "Quote Sent", "Approved", "Paid", "In Progress", "Shipped", "Delivered", "Cancelled"] },
+        "customRequestId": { "type": "string", "maxLength": 128 },
+        "leadSource": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orderNumber", "userId", "customerName", "items", "total", "paymentMethod", "status", "createdAt", "updatedAt"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Customer product review with optional photo",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "rating": { "type": "number" },
+        "comment": { "type": "string", "minLength": 3, "maxLength": 1000 },
+        "photoUrl": { "type": "string", "maxLength": 1000 },
+        "approved": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "userId", "userName", "rating", "comment", "approved", "createdAt"]
+    },
+    "Wishlist": {
+      "title": "Wishlist",
+      "description": "User saved products and custom ideas",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "productIds": { "type": "array" },
+        "savedDesigns": { "type": "array" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "productIds", "updatedAt"]
+    },
+    "Coupon": {
+      "title": "Coupon",
+      "description": "Promotional discount code",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "minLength": 2, "maxLength": 32 },
+        "discountType": { "type": "string", "enum": ["percent", "flat"] },
+        "discountValue": { "type": "number" },
+        "minOrder": { "type": "number" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["code", "discountType", "discountValue", "active"]
+    },
+    "Referral": {
+      "title": "Referral",
+      "description": "Referral tracking between referrer and friend",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "maxLength": 32 },
+        "referrerUserId": { "type": "string", "maxLength": 128 },
+        "refereeUserId": { "type": "string", "maxLength": 128 },
+        "discountAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["Pending", "Rewarded"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["code", "referrerUserId", "refereeUserId", "status", "createdAt"]
+    },
+    "SurveyResponse": {
+      "title": "SurveyResponse",
+      "description": "Customer market validation survey entry",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "favoriteProducts": { "type": "array" },
+        "preferredPriceRange": { "type": "string", "maxLength": 60 },
+        "customizationInterest": { "type": "string", "maxLength": 60 },
+        "discoverySource": { "type": "string", "maxLength": 60 },
+        "feedback": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["favoriteProducts", "preferredPriceRange", "customizationInterest", "discoverySource", "createdAt"]
+    },
+    "Lead": {
+      "title": "Lead",
+      "description": "Enquiry lead and acquisition channel record",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "contact": { "type": "string", "minLength": 2, "maxLength": 150 },
+        "source": { "type": "string", "enum": ["Instagram", "WhatsApp", "College Event", "Referral", "Website", "Other"] },
+        "notes": { "type": "string", "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["New", "Contacted", "Quoted", "Converted", "Archived"] },
+        "estimatedValue": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "contact", "source", "status", "createdAt", "updatedAt"]
+    },
+    "GalleryItem": {
+      "title": "GalleryItem",
+      "description": "Completed bespoke artwork showcase item",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "category": { "type": "string", "enum": ["Denim Jackets", "T-Shirts", "Tote Bags", "Denim Pieces"] },
+        "imageUrl": { "type": "string", "maxLength": 1000 },
+        "beforeImageUrl": { "type": "string", "maxLength": 1000 },
+        "story": { "type": "string", "maxLength": 600 },
+        "technique": { "type": "string", "maxLength": 80 },
+        "featured": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "category", "imageUrl", "technique"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User notification item",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "message": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "type": { "type": "string", "enum": ["order", "quote", "message", "promo"] },
+        "read": { "type": "boolean" },
+        "link": { "type": "string", "maxLength": 200 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "message", "type", "read", "createdAt"]
+    },
+    "ReferralCode": {
+      "title": "ReferralCode",
+      "description": "Publicly resolvable referral code pointer without user PII",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "minLength": 3, "maxLength": 32 },
+        "ownerId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["code", "ownerId", "active"]
+    },
+    "SiteSetting": {
+      "title": "SiteSetting",
+      "description": "Studio configuration, announcements, FAQs, and pre-order campaign",
+      "type": "object",
+      "properties": {
+        "bannerText": { "type": "string", "maxLength": 200 },
+        "bannerActive": { "type": "boolean" },
+        "preOrderTitle": { "type": "string", "maxLength": 150 },
+        "preOrderSubtitle": { "type": "string", "maxLength": 300 },
+        "preOrderEndsAt": { "type": "string", "maxLength": 60 },
+        "preOrderSlotsTotal": { "type": "number" },
+        "preOrderSlotsLeft": { "type": "number" },
+        "preOrderPrice": { "type": "number" },
+        "faqs": { "type": "array" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles, saved addresses, style preferences, and role"
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Catalog products"
+    },
+    "/customRequests/{requestId}": {
+      "schema": { "$ref": "#/entities/CustomRequest" },
+      "description": "Customer custom art requests"
+    },
+    "/customRequests/{requestId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/CustomMessage" },
+      "description": "Messages thread inside a custom request"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer orders"
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/Review" },
+      "description": "Product reviews"
+    },
+    "/wishlists/{userId}": {
+      "schema": { "$ref": "#/entities/Wishlist" },
+      "description": "User wishlists and saved designs"
+    },
+    "/coupons/{couponId}": {
+      "schema": { "$ref": "#/entities/Coupon" },
+      "description": "Promo coupon codes"
+    },
+    "/referrals/{referralId}": {
+      "schema": { "$ref": "#/entities/Referral" },
+      "description": "Referral tracking"
+    },
+    "/referralCodes/{code}": {
+      "schema": { "$ref": "#/entities/ReferralCode" },
+      "description": "PII-free referral code lookup"
+    },
+    "/surveyResponses/{responseId}": {
+      "schema": { "$ref": "#/entities/SurveyResponse" },
+      "description": "Customer validation survey entries"
+    },
+    "/leads/{leadId}": {
+      "schema": { "$ref": "#/entities/Lead" },
+      "description": "Lead source tracker and contact enquiries"
+    },
+    "/galleryItems/{itemId}": {
+      "schema": { "$ref": "#/entities/GalleryItem" },
+      "description": "Portfolio gallery items"
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "In-app notifications"
+    },
+    "/siteSettings/{settingId}": {
+      "schema": { "$ref": "#/entities/SiteSetting" },
+      "description": "Site banners, FAQs, and pre-order campaign settings"
+    }
+  }
+}
